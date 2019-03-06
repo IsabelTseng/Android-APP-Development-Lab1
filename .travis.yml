@@ -5,45 +5,65 @@ env:
   - ANDROID_BUILD_TOOLS=26.0.2
   - PROJECT_2=HelloToast
   - PROJECT_3=ScrollingText2
-  - secure: yacarClPcqfB1oVT8R4T3sPG4S3usW0n2J/KXd5RTfsqQjk6AFxstwGtkRji5u9Oq/jR6TBwvVsX0w5X8uFsAnsTx2lcF60+RSza6LtGiAuT8XTec+48Fd0AckgmJe2wezI4U6fSFjnOuui/vQJ2WIq6eiKAfqza7W7VYVcDQrCieWGoISTFOxQgiJdVFGMyDsLS/TzJ/3OJZRUizXypoDMvV7fBbM+GodgQ3k3KMRuKSXzcR0kDsTlTAmZv5+8G1LZ7tTnpyGVMur1Ph0kq9yz3lGIqwfkaQm4iUncEZJnXp1sZmbig01OmMuSJswK50G0iI3Aeo84BmIIkpBk+4cAwrGlrewLBHssf09IceK1CTsL3slmatqIbJoSpDpxoZ5O7/cpESl5thnGdG2BX9wEcJKw/MEVs+BHjg9gHB5hwAQleWtTuGlyPU6BEauoy2ZsC97BD7S4nxIqHLLwhZXRuxuiVWhp6N7S+YtePA+ox1k0NnuLIc2clXf3027ASPaHelLcfoSbfuTZOLhUtZTX7F2fEtA6fwkzg1HWtfDXlo4vpZgG8eftmnj6FXSngbdT1acrvt1YwP5EMLy2ECUDhwLh7E3p/YaW8c6XTyuEGzSz8vHmtpNJHgllV6UtbBHF2G4wkzhp9g1S+TR7b1iCjMpkObO/Hpqfy5UDu4fo=
-  - secure: CJtgGqqcICU7LFtM13Gm/r5zW3rsB+CCUDTFnBdGt+8uMELGOMys83CopFbLHs1bdbtJdioPHdrwx+qB3xTPWUCcZkXYfg7pXuVQ0I+d7au7b9CCrp7fLJ2IOzo3gcKantWRK3Q+lDvgRMqnjbwKnUK3iLdJUB+GLKO3HHfnbM0Bz19pXM3UZVrS60b+u3SNe+yIx5serKdDfUzUhKTOEcDlkzulvmsHAA3oF250xzxQDoQgTepeY9FVisxRAbeUs6LB/0rBytTm/LEsu7Icj67dWWzOyTAHLt0yXRqaVy7zSU1hT9JAmfFB0dRRuQBbpE5p4cvOVEtpGHACFhV+LvmZxP9tNVilufnBKT5r/JLwV8IZG0zyA3TZVBeArXSL5ji5pfBbZadiOJsCOT5mRFJxVVWTBArsaIfDfZznTRVtwP6g8U3Hqp83iW3FC9G5n4EmNMvwrLCO1k5JLg1BgZPoeTLtLSw0KA8IIVyUoIfe1K9ZlL7xWr6ZaINkG62NEYtztbW7UKtXLb+9LMw3vZKekFktcxp/hP5eyhT/c6TaATJLzySEME0G+DRrlc57TKSLkk20b9V+ksFLHj0OAMrf5fp2jk3STHjToNOdxqC7oZNcS+iY7Lju+ACLvAqQ9mycSdg+15G4BJXxxqBT8kWyn8fHc/9KHlXrtiu8xC8=
+
+# safe list
 branches:
   only:
   - master
+  
 android:
   components:
+  # Uncomment the lines below if you want to
+  # use the latest revision of Android SDK Tools
+  # - tools
+  # - platform-tools
+
+  # The BuildTools version used by your project
   - build-tools-$ANDROID_BUILD_TOOLS
+
+  # The SDK version used to compile your project
   - android-$ANDROID_API
+
+  # Additional components
+  # - extra-google-google_play_services
+  # - extra-google-m2repository
   - extra-android-m2repository
+
+  # Specify at least one system image,
+  # if you need to run emulator(s) during your tests
+  #- sys-img-x86-android-$EMULATOR_API
+  # - sys-img-armeabi-v7a-android-$EMULATOR_API
+    
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
-  - "$HOME/.android/build-cache"
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.android/build-cache   
+
 before_install:
 - export PROJECT_ROOT="${PWD}"
 - chmod +x ${PROJECT_2}/gradlew
 - chmod +x ${PROJECT_3}/gradlew
 - chmod +x result_parser.py
+
 before_script:
 - adb kill-server
 - adb connect ${EMULATOR_SERVER}
 - adb devices
+
 script:
 - cd ${PROJECT_ROOT}
 - cd ${PROJECT_2} && ./gradlew connectedDebugAndroidTest --stacktrace
 - cd ${PROJECT_ROOT}
 - cd ${PROJECT_3} && ./gradlew connectedDebugAndroidTest --stacktrace
+
 after_script:
 - cd ${PROJECT_ROOT}
-- "./result_parser.py ${PROJECT_ROOT}/${PROJECT_2}/app/build/reports/androidTests/connected/com.example.android.hellotoast.ChangeAnAppTest.html
-  >> results.txt"
-- "./result_parser.py ${PROJECT_ROOT}/${PROJECT_3}/app/build/reports/androidTests/connected/com.example.android.scrollingtext.ChangeAnAppTest.html
-  >> results.txt"
-- echo $(basename ${TRAVIS_REPO_SLUG}) ${TRAVIS_BRANCH} ${TRAVIS_COMMIT} $(git show
-  -s --format=%ci ${TRAVIS_COMMIT} | cut -c 1-20) $(cat results.txt) > results.txt
+- ./result_parser.py ${PROJECT_ROOT}/${PROJECT_2}/app/build/reports/androidTests/connected/com.example.android.hellotoast.ChangeAnAppTest.html >> results.txt
+- ./result_parser.py ${PROJECT_ROOT}/${PROJECT_3}/app/build/reports/androidTests/connected/com.example.android.scrollingtext.ChangeAnAppTest.html >> results.txt
+- echo $(basename ${TRAVIS_REPO_SLUG}) ${TRAVIS_BRANCH} ${TRAVIS_COMMIT} $(git show -s --format=%ci ${TRAVIS_COMMIT} | cut -c 1-20) $(cat results.txt) > results.txt
 - awk  '//{for(i=6;i<NF;i=i+2) print $i"\t"$(i+1)}' results.txt
 - curl -d "@results.txt" -X POST ${DB_SERVER_URL}

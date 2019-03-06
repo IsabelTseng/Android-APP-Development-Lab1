@@ -97,7 +97,7 @@ public class ChangeAnAppTest {
         // Check that Zero Button on the bottom of the TOAST Button
         onView(withText(ZERO_BUTTON)).check(isCompletelyBelow(withId(R.id.button_toast)));
         // Check that Zero Button on the top of the Count Button
-        onView(withText(ZERO_BUTTON)).check(isCompletelyAbove(withId(R.id.show_count)));
+        onView(withText(ZERO_BUTTON)).check(isCompletelyAbove(withId(R.id.button_count)));
     }
 
     /**
