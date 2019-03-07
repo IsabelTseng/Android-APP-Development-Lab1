@@ -46,6 +46,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 
 /**
  * Tests for the 10.Homework "Change an app" in Android fundamentals 01.2 Part B: The layout editor
@@ -93,11 +94,12 @@ public class ChangeAnAppTest {
         // Check that Count Button is on the left side of the show_count TextView
         onView(withId(R.id.button_count)).check(isCompletelyLeftOf(withId(R.id.show_count)));
         // Check that Zero Button is displayed
-        onView(withText(ZERO_BUTTON)).check(matches(isCompletelyDisplayed()));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(isCompletelyDisplayed()));
         // Check that Zero Button on the bottom of the TOAST Button
-        onView(withText(ZERO_BUTTON)).check(isCompletelyBelow(withId(R.id.button_toast)));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(isCompletelyBelow(withId(R.id.button_toast)));
         // Check that Zero Button on the top of the Count Button
-        onView(withText(ZERO_BUTTON)).check(isCompletelyAbove(withId(R.id.button_count)));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(isCompletelyAbove(withId(R.id.button_count)));
+
     }
 
     /**
@@ -117,7 +119,7 @@ public class ChangeAnAppTest {
         // Check that Count Button is higher than the bottom of of the show_count TextView
         assertThat(countButton.getBottom(), lessThanOrEqualTo(showTextView.getBottom()));
         // Check that Zero Button is initialized to a gray background
-        onView(withText(ZERO_BUTTON)).check(matches(new IsBackgroundColor(Color.GRAY)));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(new IsBackgroundColor(Color.GRAY)));
     }
 
     /**
@@ -128,7 +130,7 @@ public class ChangeAnAppTest {
     public void testZeroButtonInLayoutVariants() {
         // Check that Zero Button exists for landscape orientation
         mActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        onView(withText(ZERO_BUTTON)).check(matches(isCompletelyDisplayed()));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(isCompletelyDisplayed()));
     }
 
     /**
@@ -141,11 +143,11 @@ public class ChangeAnAppTest {
         onView(withId(R.id.button_count)).perform(click());
         onView(withId(R.id.show_count)).perform(setTextInTextView(NON_ZERO));
         // Click Zero Button
-        onView(withText(ZERO_BUTTON)).perform(click());
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).perform(click());
         // Check that show_count TextVIew display 0, when Zero Button is clicked
         onView(withId(R.id.show_count)).check(matches(withText(ZERO)));
         // Check that the background color of Zero Button is gray
-        onView(withText(ZERO_BUTTON)).check(matches(new IsBackgroundColor(Color.GRAY)));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(new IsBackgroundColor(Color.GRAY)));
     }
 
     /**
@@ -167,7 +169,7 @@ public class ChangeAnAppTest {
         onView(withId(R.id.button_count)).perform(click());
         currentNumber += 1;
         // Check whether Zero Button Change to some color other than Gray
-        onView(withText(ZERO_BUTTON)).check(matches(not(new IsBackgroundColor(Color.GRAY))));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(not(new IsBackgroundColor(Color.GRAY))));
         // Check whether the color of Count Button change to another color
         colorForOdd = countBackground.getColor();
         assertThat(colorForEven, is(not(equalTo(colorForOdd))));
@@ -176,7 +178,7 @@ public class ChangeAnAppTest {
         onView(withId(R.id.button_count)).perform(click());
         currentNumber += 1;
         // Check whether Zero Button Change to some color other than Gray
-        onView(withText(ZERO_BUTTON)).check(matches(not(new IsBackgroundColor(Color.GRAY))));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(not(new IsBackgroundColor(Color.GRAY))));
         // Check whether the color of Count Button change to the color for even count
         assertThat(colorForOddAndEven(currentNumber, countBackground, colorForOdd, colorForEven), is(true));
 
@@ -184,35 +186,35 @@ public class ChangeAnAppTest {
         onView(withId(R.id.button_count)).perform(click());
         currentNumber += 1;
         // Check whether Zero Button Change to some color other than Gray
-        onView(withText(ZERO_BUTTON)).check(matches(not(new IsBackgroundColor(Color.GRAY))));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(not(new IsBackgroundColor(Color.GRAY))));
         // Check whether the color of Count Button change to the color for odd count
         assertThat(colorForOddAndEven(currentNumber, countBackground, colorForOdd, colorForEven), is(true));
 
         // Click Zero Button (from 3 to 0)
-        onView(withText(ZERO_BUTTON)).perform(click());
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).perform(click());
         currentNumber = 0;
         // Check whether Zero Button Change to Gray
-        onView(withText(ZERO_BUTTON)).check(matches(new IsBackgroundColor(Color.GRAY)));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(new IsBackgroundColor(Color.GRAY)));
 
         // Click Count Button (from 0 to 1)
         onView(withId(R.id.button_count)).perform(click());
         currentNumber += 1;
         // Check whether Zero Button Change to some color other than Gray
-        onView(withText(ZERO_BUTTON)).check(matches(not(new IsBackgroundColor(Color.GRAY))));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(not(new IsBackgroundColor(Color.GRAY))));
 
         // Click Count Button (from 1 to 2)
         onView(withId(R.id.button_count)).perform(click());
         currentNumber += 1;
         // Check whether Zero Button Change to some color other than Gray
-        onView(withText(ZERO_BUTTON)).check(matches(not(new IsBackgroundColor(Color.GRAY))));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(not(new IsBackgroundColor(Color.GRAY))));
         // Check whether the color of Count Button change to the color for odd count
         assertThat(colorForOddAndEven(currentNumber, countBackground, colorForOdd, colorForEven), is(true));
 
         // Click Zero Button (from 2 to 0)
-        onView(withText(ZERO_BUTTON)).perform(click());
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).perform(click());
         currentNumber = 0;
         // Check whether Zero Button Change to Gray
-        onView(withText(ZERO_BUTTON)).check(matches(new IsBackgroundColor(Color.GRAY)));
+        onView(withText(equalToIgnoringCase(ZERO_BUTTON))).check(matches(new IsBackgroundColor(Color.GRAY)));
 
     }
 
